@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center text-secondary">Tic Tac Toe</h1>
+        <div  id="result-box">
+
+        </div>
+        <div class="score-board">
+            <div id="score-display"><i class="fa fa-trophy" style="font-size:48px;color:rgb(255, 242, 0)"  onclick="toggleScoreBoard()"></i></div>
+            <div class="score-board-content" id="score-board-content">
+                <h1>Score</h1>
+                Player X : <span id="mark-1">0</span><br>
+                Player O :  <span id="mark-2">0</span>
+            </div>
+        </div>
+        
+</div>       
+        <div class="container text-success text-center fs-2">Current move <span class="fs-1" id="user">X</span> </div>
+        <div class="container bg-secondary p-3 xox">
+            <div class="row bg-white mx-2 ">
+                <button class="col-4 cell" id="1" onclick="fun(this)"></button>
+                <button class="col-4 cell" id="2" onclick="fun(this)"></button>
+                <button class="col-4 cell" id="3" onclick="fun(this)"></button>
+            </div>
+            <div class="row bg-white mx-2 ">
+                <button class="col-4 cell" id="4" onclick="fun(this)"></button>
+                <button class="col-4 cell" id="5" onclick="fun(this)"></button>
+                <button class="col-4 cell" id="6" onclick="fun(this)"></button>
+            </div>
+            <div class="row bg-white mx-2">
+                <button class="col-4 cell" id="7" onclick="fun(this)"></button>
+                <button class="col-4 cell" id="8" onclick="fun(this)"></button>
+                <button class="col-4 cell" id="9" onclick="fun(this)"></button>
+            </div>
+        </div>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>

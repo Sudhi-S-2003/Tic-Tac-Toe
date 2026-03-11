@@ -1,0 +1,265 @@
+/* --- VARIABLES & BASE SETUP --- */
+:root {
+    --primary-color: #2b2d42;
+    --secondary-color: #8d99ae;
+    --x-color: #ef233c;
+    --o-color: #3a86ff;
+    --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    --card-bg: #ffffff;
+    --danger-color: #d90429;
+    --board-bg: #edf2f4;
+    --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centers everything vertically */
+    height: 100dvh; /* Modern mobile-friendly 100vh */
+    max-height: 100vh;
+    padding: 2vh 10px;
+    overflow: hidden; /* Prevents any scrolling */
+}
+
+/* --- TYPOGRAPHY --- */
+.main-title {
+    /* Shrinks on short screens, caps at 2.5rem */
+    font-size: clamp(1.8rem, 5vh, 2.5rem); 
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 2vh;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.chapter-badge {
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: clamp(0.8rem, 2vh, 1rem);
+    font-weight: 600;
+    margin-bottom: 2vh;
+    letter-spacing: 1px;
+}
+
+/* --- CARDS & CONTAINERS --- */
+.card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+    padding: clamp(15px, 4vh, 30px);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+#setup-container {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* --- INPUTS --- */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+}
+
+input {
+    padding: clamp(10px, 2vh, 15px) 20px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+input:focus {
+    border-color: var(--primary-color);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(43, 45, 66, 0.1);
+}
+
+/* --- SCOREBOARD --- */
+.scoreboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    margin-bottom: 2vh;
+}
+
+.score-item { flex: 1; }
+
+.name-label {
+    font-size: clamp(0.7rem, 1.5vh, 1rem);
+    color: var(--secondary-color);
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.score-value {
+    font-size: clamp(1.2rem, 4vh, 2rem);
+    font-weight: 800;
+}
+
+.player-x .score-value { color: var(--x-color); }
+.player-o .score-value { color: var(--o-color); }
+.draws .score-value { color: var(--primary-color); }
+
+.status {
+    font-size: clamp(1.1rem, 3vh, 1.5rem);
+    font-weight: 700;
+    margin-bottom: 2vh;
+    min-height: 4vh;
+    text-align: center;
+}
+
+/* --- BOARD --- */
+.board {
+    display: grid;
+    /* This guarantees the board always fits the screen, whether portrait or landscape */
+    grid-template-columns: repeat(3, min(26vw, 16vh, 110px));
+    grid-template-rows: repeat(3, min(26vw, 16vh, 110px));
+    gap: 8px;
+    background-color: var(--board-bg);
+    padding: 10px;
+    border-radius: 16px;
+    box-shadow: inset 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.cell {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: min(15vw, 10vh, 4.5rem); /* Text scales with the box */
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cell:hover:not(.taken) {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: var(--shadow-hover);
+    background-color: #f8f9fa;
+}
+
+.cell.x { color: var(--x-color); }
+.cell.o { color: var(--o-color); }
+.cell.taken { cursor: not-allowed; }
+
+/* --- BUTTONS --- */
+button {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    border: none;
+    padding: clamp(10px, 2vh, 14px) clamp(15px, 3vw, 28px);
+    font-size: clamp(0.9rem, 2vh, 1.1rem);
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+button:active { transform: scale(0.96); }
+
+.btn-primary { background-color: var(--primary-color); color: white; width: 100%; }
+.btn-primary:hover { background-color: #1a1b29; box-shadow: var(--shadow-hover); }
+
+.btn-secondary { background-color: var(--secondary-color); color: white; }
+.btn-secondary:hover { background-color: #6c757d; }
+
+.btn-danger { background-color: var(--danger-color); color: white; }
+.btn-danger:hover { background-color: #bd0323; }
+
+.controls { margin-top: 2vh; min-height: 5vh; width: 100%; display: flex; justify-content: center; }
+.extra-controls { display: flex; gap: 10px; margin-top: 1vh; flex-wrap: wrap; justify-content: center; }
+
+/* --- TOOLTIPS --- */
+.tooltip { position: relative; display: inline-block; }
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: var(--primary-color);
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px;
+    position: absolute;
+    z-index: 10;
+    bottom: 135%; 
+    left: 50%;
+    margin-left: -75px; 
+    opacity: 0;
+    transition: opacity 0.3s ease, bottom 0.3s ease;
+    font-size: 0.75rem;
+    pointer-events: none;
+    box-shadow: var(--shadow-soft);
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%; 
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--primary-color) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext { visibility: visible; opacity: 1; bottom: 125%; }
+
+/* --- UTILITIES & ANIMATIONS --- */
+.hidden { display: none !important; }
+.fade-in { animation: fadeIn 0.5s ease forwards; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pulse { animation: pulse 2s infinite; }
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Mobile Responsiveness (Ensures Scoreboard doesn't get too tall) */
+@media (max-width: 450px) {
+    .scoreboard { gap: 5px; padding: 10px; }
+    .extra-controls { width: 100%; }
+    .extra-controls button { width: 100%; }
+    .tooltip .tooltiptext { display: none; }
+}

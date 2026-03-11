@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe Chapters</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1 class="main-title">Tic Tac Toe</h1>
+
+    <div id="setup-container" class="card fade-in">
+        <h2>Player Setup</h2>
+        <div class="input-group">
+            <input type="text" id="p1-input" placeholder="Player 1 Name (X)" autocomplete="off">
+            <input type="text" id="p2-input" placeholder="Player 2 Name (O)" autocomplete="off">
+        </div>
+        <button id="start-btn" class="btn-primary">Start Tournament</button>
+    </div>
+
+    <div id="game-container" class="hidden fade-in">
+        <h3 id="chapter-title" class="chapter-badge">Chapter 1</h3>
+
+        <div class="scoreboard card">
+            <div class="score-item player-x">
+                <div id="player1-name" class="name-label">Player 1 (X)</div>
+                <div class="score-value" id="player1-score">0</div>
+            </div>
+            <div class="score-item draws">
+                <div class="name-label">Draws</div>
+                <div class="score-value" id="draw-score">0</div>
+            </div>
+            <div class="score-item player-o">
+                <div id="player2-name" class="name-label">Player 2 (O)</div>
+                <div class="score-value" id="player2-score">0</div>
+            </div>
+        </div>
+
+        <div class="status" id="status-text">Getting ready...</div>
+
+        <div class="board" id="board">
+            </div>
+
+        <div class="controls">
+            <button id="next-chapter-btn" class="btn-primary hidden pulse">Play Next Chapter</button>
+        </div>
+
+        <div class="extra-controls">
+            <div class="tooltip">
+                <button id="reset-btn" class="btn-secondary">Reset Chapter</button>
+                <span class="tooltiptext">Clear the board and restart this current match</span>
+            </div>
+            <div class="tooltip">
+                <button id="restart-btn" class="btn-danger">Restart Tournament</button>
+                <span class="tooltiptext">Go back to setup and erase all scores</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

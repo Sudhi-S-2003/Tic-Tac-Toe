@@ -71,15 +71,23 @@ class Game {
         const get = (c, r) => this.getCell(c, r).content;
 
         const wins = [
-            [get(0, 0), get(1, 0), get(2, 0)], [get(0, 1), get(1, 1), get(2, 1)], [get(0, 2), get(1, 2), get(2, 2)],
-            [get(0, 0), get(0, 1), get(0, 2)], [get(1, 0), get(1, 1), get(1, 2)], [get(2, 0), get(2, 1), get(2, 2)],
-            [get(0, 0), get(1, 1), get(2, 2)], [get(2, 0), get(1, 1), get(0, 2)]
+            { cells: [get(0, 0), get(1, 0), get(2, 0)], lineClass: 'win-row-1' },
+            { cells: [get(0, 1), get(1, 1), get(2, 1)], lineClass: 'win-row-2' },
+            { cells: [get(0, 2), get(1, 2), get(2, 2)], lineClass: 'win-row-3' },
+            { cells: [get(0, 0), get(0, 1), get(0, 2)], lineClass: 'win-col-1' },
+            { cells: [get(1, 0), get(1, 1), get(1, 2)], lineClass: 'win-col-2' },
+            { cells: [get(2, 0), get(2, 1), get(2, 2)], lineClass: 'win-col-3' },
+            { cells: [get(0, 0), get(1, 1), get(2, 2)], lineClass: 'win-diag-1' },
+            { cells: [get(2, 0), get(1, 1), get(0, 2)], lineClass: 'win-diag-2' }
         ];
 
         let winContent = null;
+        let winClass = null;
+
         const isWin = wins.some(line => {
-            if (line[0] && line[0] === line[1] && line[1] === line[2]) {
-                winContent = line[0];
+            if (line.cells[0] && line.cells[0] === line.cells[1] && line.cells[1] === line.cells[2]) {
+                winContent = line.cells[0];
+                winClass = line.lineClass;
                 return true;
             }
             return false;
@@ -88,7 +96,7 @@ class Game {
         const isCompleted = board.every(cell => cell.content !== "") || isWin;
         const winPlayer = winContent ? (winContent === this.player1Content ? this.player1 : this.player2) : null;
         
-        return { isWin, isCompleted, winContent, winPlayer };
+        return { isWin, isCompleted, winContent, winPlayer, winClass };
     }
     
     play = (player, cell) => {
@@ -134,17 +142,14 @@ class Chapters {
     }
 }
 
-
 // --- DOM MANIPULATION & UI LOGIC --- //
 
-// Setup Elements
 const setupContainer = document.getElementById("setup-container");
 const gameContainer = document.getElementById("game-container");
 const p1Input = document.getElementById("p1-input");
 const p2Input = document.getElementById("p2-input");
 const startBtn = document.getElementById("start-btn");
 
-// Game Elements
 const boardEl = document.getElementById("board");
 const statusEl = document.getElementById("status-text");
 const chapterTitleEl = document.getElementById("chapter-title");
@@ -156,10 +161,8 @@ const p1ScoreEl = document.getElementById("player1-score");
 const p2ScoreEl = document.getElementById("player2-score");
 const drawScoreEl = document.getElementById("draw-score");
 
-// State
 let player1, player2, tournament, currentGame;
 
-// Handle starting the game from the setup screen
 startBtn.addEventListener("click", () => {
     const p1Name = p1Input.value.trim() || "Player 1";
     const p2Name = p2Input.value.trim() || "Player 2";
@@ -168,30 +171,25 @@ startBtn.addEventListener("click", () => {
     player2 = new Player(p2Name);
     tournament = new Chapters(player1, player2);
     
-    // Update Scoreboard UI with names
     document.getElementById("player1-name").innerText = `${player1.playerName} (X)`;
     document.getElementById("player2-name").innerText = `${player2.playerName} (O)`;
     updateScoreboard();
 
-    // Hide Setup, Show Game
     setupContainer.classList.add("hidden");
     gameContainer.classList.remove("hidden");
 
     startChapter();
 });
 
-// Event Listeners for Game Controls
 nextChapterBtn.addEventListener("click", () => {
     tournament.chapterCount++;
     startChapter();
 });
 
-// Clears the board but keeps the score and current chapter
 resetBtn.addEventListener("click", () => {
     startChapter();
 });
 
-// Goes back to the setup screen, resetting everything
 restartBtn.addEventListener("click", () => {
     gameContainer.classList.add("hidden");
     setupContainer.classList.remove("hidden");
@@ -211,25 +209,32 @@ function startChapter() {
 }
 
 function renderBoard() {
-    boardEl.innerHTML = ""; 
-    
-    const sortedCells = [...currentGame.board.cells].sort((a, b) => {
-        if (a.rowNo === b.rowNo) return a.colNo - b.colNo;
-        return a.rowNo - b.rowNo;
-    });
+    boardEl.innerHTML = ""; 
+    
+    const sortedCells = [...currentGame.board.cells].sort((a, b) => {
+        if (a.rowNo === b.rowNo) return a.colNo - b.colNo;
+        return a.rowNo - b.rowNo;
+    });
 
-    sortedCells.forEach(cell => {
-        const cellEl = document.createElement("div");
-        cellEl.classList.add("cell");
-        if (cell.content) {
-            cellEl.classList.add(cell.content);
-            cellEl.classList.add("taken");
-            cellEl.innerText = cell.content.toUpperCase();
-        }
+    sortedCells.forEach(cell => {
+        const cellEl = document.createElement("div");
+        cellEl.classList.add("cell");
 
-        cellEl.addEventListener("click", () => handleCellClick(cell.colNo, cell.rowNo));
-        boardEl.appendChild(cellEl);
-    });
+        // --- ADD THESE TWO LINES ---
+        // This explicitly locks each cell into its correct grid position
+        cellEl.style.gridColumn = cell.colNo + 1;
+        cellEl.style.gridRow = cell.rowNo + 1;
+        // ---------------------------
+
+        if (cell.content) {
+            cellEl.classList.add(cell.content);
+            cellEl.classList.add("taken");
+            cellEl.innerText = cell.content.toUpperCase();
+        }
+
+        cellEl.addEventListener("click", () => handleCellClick(cell.colNo, cell.rowNo));
+        boardEl.appendChild(cellEl);
+    });
 }
 
 function handleCellClick(colNo, rowNo) {
@@ -264,6 +269,15 @@ function handleGameEnd(stats) {
     statusEl.style.color = "var(--primary-color)";
     if (stats.isWin) {
         statusEl.innerText = `🎉 Congratulations! ${stats.winPlayer.playerName} wins Chapter ${tournament.chapterCount}!`;
+        
+        // --- DRAW THE WIN LINE ---
+        if (stats.winClass) {
+            const lineEl = document.createElement("div");
+            lineEl.classList.add("win-line", stats.winClass);
+            lineEl.style.backgroundColor = stats.winContent === "x" ? "var(--x-color)" : "var(--o-color)";
+            boardEl.appendChild(lineEl);
+        }
+
     } else {
         statusEl.innerText = "🤝 It's a draw!";
     }
